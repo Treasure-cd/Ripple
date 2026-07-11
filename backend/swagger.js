@@ -63,6 +63,45 @@ const options = {
             },
           },
         },
+        SkillCategory: {
+          type: 'string',
+          description: 'Allowed skill categories',
+          enum: ['Programming', 'Design', 'Language'],
+          example: 'Programming',
+        },
+        Skill: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            name: { type: 'string', example: 'React' },
+            category: { $ref: '#/components/schemas/SkillCategory' },
+          },
+        },
+        SkillListResponse: {
+          type: 'object',
+          properties: {
+            skills: {
+              type: 'array',
+              items: {
+                $ref: '#/components/schemas/Skill',
+              },
+            },
+          },
+        },
+        SkillCreateRequest: {
+          type: 'object',
+          required: ['name', 'category'],
+          properties: {
+            name: { type: 'string', example: 'React' },
+            category: { $ref: '#/components/schemas/SkillCategory' },
+          },
+        },
+        SkillCreateResponse: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 12 },
+          },
+        },
         ErrorResponse: {
           type: 'object',
           properties: {

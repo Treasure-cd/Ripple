@@ -1,4 +1,4 @@
-## How database looks like, sans auth.
+## How database looks like.
 
 Ripple is an app that works as a place you can earn and spend knowledge credits.
 Users have:
