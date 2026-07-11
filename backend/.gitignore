@@ -1,0 +1,19 @@
+# Environment files
+.env
+.env.*
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Dependency folders
+node_modules/
+
+# OS / editor junk
+.DS_Store
+.vscode/
