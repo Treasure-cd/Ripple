@@ -102,6 +102,26 @@ const options = {
             id: { type: 'integer', example: 12 },
           },
         },
+        UserSkill: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            user_id: { type: 'integer', example: 1 },
+            skill_id: { type: 'integer', example: 2 },
+            intent: { type: 'string', example: 'Teach' },
+            proficiency_level: { type: 'string', example: 'Intermediate', nullable: true },
+            hourly_rate: { type: 'number', example: 1, nullable: true },
+          },
+        },
+        UserSkillListResponse: {
+          type: 'object',
+          properties: {
+            skills: {
+              type: 'array',
+              items: { $ref: '#/components/schemas/UserSkill' }
+            }
+          }
+        },
         ErrorResponse: {
           type: 'object',
           properties: {

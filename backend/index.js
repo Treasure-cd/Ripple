@@ -5,13 +5,14 @@ import errorHandler from './middleware/errorHandler.js';
 import authRouter from './routes/auth.routes.js'
 import userRouter from './routes/user.routes.js'
 import skillRouter from './routes/skill.routes.js'
+import userSkillRouter from './routes/user-skill.routes.js'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger.js';
 
 dotenv.config()
-console.log(process.env.JWT_SECRET) //you can add to test
+//console.log(process.env.JWT_SECRET) //you can add to test
 
 const app = express();
 app.use(cors());
@@ -27,6 +28,7 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/skills', skillRouter);
+app.use('/api/users/me/skills', userSkillRouter)
 
 app.use((req, res, next) => {
     const error = new Error(`Not Found - ${req.originalUrl}`);

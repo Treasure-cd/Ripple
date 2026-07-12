@@ -1,9 +1,15 @@
 import { createSkill, getSkills, searchSkill } from "../queries/skills.queries.js";
 
+const VALID_CATEGORIES = ['Programming', 'Design', 'Language']
 const createSkillController = async (req, res) => {
     const { name, category } = req.body;
     if (!name || !category) {
         return res.status(400).json({ error: "Name and category are required" });
+    }
+
+
+    if (!VALID_CATEGORIES.includes(category)) {
+        return res.status(400).json({ error: "Category is invalid. Try one of Programming, Design and Language" });
     }
 
     const id = createSkill(name, category);

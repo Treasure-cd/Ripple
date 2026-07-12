@@ -23,11 +23,23 @@ UserSkills have:
 
 Transactions have:
     - Transaction ID
+    - Session ID
     - Sender ID
     - Reciever ID
     - Amount
     - Status (Pending, Completed, Cancelled)
     - Created at
+
+Sessions have:
+    - Session ID
+    - User Skill ID
+    - Learner ID
+    - Teacher's ID
+    - Scheduled at
+    - Credits cost
+    - Status
+    - Created At
+    - Completed At
 
 Reviews have:
     - User Id
