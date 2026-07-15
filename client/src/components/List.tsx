@@ -1,52 +1,62 @@
-import { mockUsers } from '../../data/mock'
 import { Link } from '@tanstack/react-router'
-import type { User } from '../../types/user'
-import { Bolt } from 'lucide-react'
+import { Bolt, ArrowRight } from 'lucide-react'
 
-export default function List( { selected }: { selected: string[] }) {
+import { mockUsers } from '../../data/mock'
+import type { User } from '../../types/user'
+
+export default function List({ selected }: { selected: string[] }) {
   let filteredUsers = mockUsers.filter((user) =>
     user.skills.some((skill) => selected.includes(skill)),
   )
+
   if (filteredUsers.length <= 0) {
     filteredUsers = mockUsers
   }
+
   return (
-    <div className="space-y-12 w-2/3">
+    <div className="grid gap-4 lg:flex-1">
       {filteredUsers.map((user: User) => (
         <div
           key={user.id}
-          className="bg-card space-y-6 p-5 rounded-xl flex flex-col gap-3 hover:bg-neutral-700 transition-colors"
+          className="rounded-2xl border border-border bg-card p-5 shadow-[0_16px_40px_rgba(15,17,20,0.06)]"
         >
-          <div>
-            <h2 className="font-medium text-2xl text-foreground mb-6">
-              {user.name}
-            </h2>
-            <span className="bg-primary text-foreground px-3 rounded-full"><Bolt/> {user.credits} </span>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="font-heading text-2xl font-[900] tracking-[-0.05em] text-foreground">
+                {user.name}
+              </h2>
+              <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-sm font-semibold text-foreground">
+                <Bolt className="h-4 w-4 text-primary" />
+                {user.credits} credits
+              </div>
+            </div>
+            <Link
+              to="/user/$id"
+              params={{ id: user.id }}
+              className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition hover:border-[color-mix(in_srgb,var(--primary)_24%,var(--border))] hover:bg-accent/40"
+            >
+              View profile
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <h4 className="text-foreground min-w-full mb-2">Skills</h4>
+
+          <div className="mt-5 flex flex-wrap gap-2">
             {user.skills.map((skill: string) => (
               <span
                 key={skill}
-                className="bg-sidebar mb-6 text-foreground px-3 py-1 text-sm rounded-lg"
+                className="rounded-full border border-border bg-secondary px-3 py-1.5 text-sm text-foreground"
               >
                 {skill}
               </span>
             ))}
-            <h4 className="w-full">Interested in</h4>
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2 text-sm text-muted-foreground">
+            <span className="font-medium text-foreground">Interested in:</span>
             {user.interests.map((int: string) => (
-              <span className="text-accent-foreground" key={int}>
-                {int}
-              </span>
+              <span key={int}>{int}</span>
             ))}
           </div>
-          <Link
-            to="/user/$id"
-            params={{ id: user.id }}
-            className="bg-primary cursor-pointer text-neutral-900 font-medium py-2 text-center rounded-xl"
-          >
-            View Profile
-          </Link>
         </div>
       ))}
     </div>

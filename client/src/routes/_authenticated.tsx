@@ -1,21 +1,35 @@
-import { Outlet, redirect, createFileRoute } from '@tanstack/react-router'
+﻿import { Outlet, createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import { useAuthStore } from '../../store/auth-store'
 
 export const Route = createFileRoute('/_authenticated')({
-  beforeLoad: ({ context, location }) => {
-    const accessToken = useAuthStore.getState().accessToken
-    console.log('Context token:', context.auth.accessToken)
-    console.log('Store token:', useAuthStore.getState().accessToken)
-    if (!accessToken) {
-      throw redirect({
+  beforeLoad: ({ context }) => ({
+    auth: context.auth,
+  }),
+  component: AuthenticatedLayout,
+})
+
+function AuthenticatedLayout() {
+  const navigate = useNavigate()
+  const accessToken = useAuthStore((state) => state.accessToken)
+  const hasHydrated = useAuthStore((state) => state.hasHydrated)
+
+  useEffect(() => {
+    if (hasHydrated && !accessToken) {
+      void navigate({
         to: '/signin',
-        search: { redirect: location.href },
+        replace: true,
       })
     }
-    return {
-      auth: context.auth,
-    }
-  },
+  }, [accessToken, hasHydrated, navigate])
 
-  component: () => <Outlet />,
-})
+  if (!hasHydrated) {
+    return null
+  }
+
+  if (!accessToken) {
+    return null
+  }
+
+  return <Outlet />
+}

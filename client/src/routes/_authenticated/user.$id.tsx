@@ -10,9 +10,11 @@ import {
   CheckCircle2,
   Mail,
   Phone,
-  Clock
+  Clock,
 } from 'lucide-react'
+
 import { mockUsers } from '../../../data/mock'
+import { Section, SectionCard, SectionEyebrow, SectionHeading } from '#/components/landing/landing-ui'
 
 export const Route = createFileRoute('/_authenticated/user/$id')({
   component: UserProfile,
@@ -24,232 +26,232 @@ function UserProfile() {
 
   if (!user) {
     return (
-      <div className="flex min-h-[calc(100vh-5rem)] items-center justify-center text-[var(--muted-foreground)]">
-        <div className="text-center">
-          <h2 className="text-2xl font-heading text-foreground mb-2">User not found</h2>
-          <p>The profile you're looking for doesn't exist or has been removed.</p>
-        </div>
-      </div>
+      <main className="flex min-h-[calc(100vh-5rem)] items-center justify-center bg-[linear-gradient(180deg,#f7f8fc_0%,#f4f6fb_48%,#ffffff_100%)] px-4 dark:bg-[linear-gradient(180deg,#0b0d10_0%,#0d1014_48%,#10141a_100%)]">
+        <Section>
+          <SectionCard className="mx-auto max-w-md text-center">
+            <SectionEyebrow className="mx-auto">
+              <Calendar className="h-3.5 w-3.5" />
+              Profile not found
+            </SectionEyebrow>
+            <SectionHeading
+              className="mt-4"
+              title="User not found"
+              description="The profile you're looking for doesn't exist or has been removed."
+            />
+          </SectionCard>
+        </Section>
+      </main>
     )
   }
 
   return (
-    <main className="min-h-[calc(100vh-5rem)] pb-20 pt-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto font-body">
-      {/* ─── Header Section ─── */}
-      <header className="relative flex flex-col md:flex-row gap-8 items-start md:items-center pb-12 border-b border-border">
-        {/* Avatar */}
-        <div className="shrink-0 relative">
-          <img
-            src={user.profileImage}
-            alt={user.name}
-            className="w-32 h-32 rounded-3xl object-cover shadow-xl border border-border/50"
-          />
-          <div className="absolute -bottom-3 -right-3 bg-card border border-border rounded-full p-2 shadow-sm">
-            <Medal className="w-5 h-5 text-primary" />
-          </div>
-        </div>
+    <main className="min-h-[calc(100vh-5rem)] bg-[linear-gradient(180deg,#f7f8fc_0%,#f4f6fb_48%,#ffffff_100%)] py-8 dark:bg-[linear-gradient(180deg,#0b0d10_0%,#0d1014_48%,#10141a_100%)]">
+      <Section className="space-y-8">
+        <header className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+          <SectionCard className="overflow-hidden p-0">
+            <div className="h-24 bg-[linear-gradient(90deg,rgba(93,111,255,0.14),rgba(93,111,255,0.04))]" />
+            <div className="px-6 pb-6 pt-0 sm:px-8">
+              <div className="-mt-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                <div className="flex items-end gap-4">
+                  <div className="relative">
+                    <img
+                      src={user.profileImage}
+                      alt={user.name}
+                      className="h-24 w-24 rounded-2xl border-4 border-card object-cover shadow-[0_16px_40px_rgba(15,17,20,0.14)]"
+                    />
+                    <div className="absolute -bottom-2 -right-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-foreground text-background shadow-lg">
+                      <Medal className="h-4 w-4" />
+                    </div>
+                  </div>
+                  <div className="pb-1">
+                    <h1 className="font-heading text-3xl font-[900] tracking-[-0.05em] text-foreground sm:text-4xl">
+                      {user.name}
+                    </h1>
+                    <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                      <span className="rounded-full border border-border bg-secondary px-3 py-1 text-foreground">
+                        {user.contactDetails.handle}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <MapPin className="h-4 w-4" />
+                        {user.location}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <Star className="h-4 w-4 text-primary" />
+                        {user.rating} ({user.reputation})
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-        {/* Info */}
-        <div className="flex-1 space-y-4">
-          <div>
-            <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-3xl sm:text-4xl font-heading font-semibold text-foreground tracking-tight">
-                {user.name}
-              </h1>
-              <span className="text-sm font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
-                {user.contactDetails.handle}
-              </span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mt-2">
-              <div className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4" />
-                {user.location}
+                <div className="flex gap-3">
+                  <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-sm font-semibold text-foreground transition hover:border-[color-mix(in_srgb,var(--primary)_24%,var(--border))] hover:bg-accent/40">
+                    <MessageCircle className="h-4 w-4" />
+                    Message
+                  </button>
+                  <button className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_12px_30px_rgba(93,111,255,0.22)] transition hover:bg-[color-mix(in_srgb,var(--primary)_84%,black)]">
+                    <ArrowRightLeft className="h-4 w-4" />
+                    Request swap
+                  </button>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                {user.rating} ({user.reputation})
+
+              <p className="mt-6 max-w-3xl text-base leading-8 text-muted-foreground">
+                {user.bio}
+              </p>
+            </div>
+          </SectionCard>
+
+          <SectionCard className="space-y-4">
+            <SectionEyebrow>Swap details</SectionEyebrow>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-xl border border-border bg-secondary p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+                  Available credits
+                </p>
+                <p className="mt-2 text-3xl font-heading font-[900] tracking-[-0.06em] text-foreground">
+                  {user.credits}
+                </p>
+              </div>
+              <div className="rounded-xl border border-border bg-secondary p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+                  Total swaps
+                </p>
+                <p className="mt-2 text-3xl font-heading font-[900] tracking-[-0.06em] text-foreground">
+                  {user.previousExchanges.length}
+                </p>
+              </div>
+              <div className="rounded-xl border border-border bg-secondary p-4 sm:col-span-2">
+                <p className="text-xs font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+                  Member since
+                </p>
+                <p className="mt-2 inline-flex items-center gap-2 font-semibold text-foreground">
+                  <Clock className="h-4 w-4 text-primary" />
+                  2026
+                </p>
               </div>
             </div>
+          </SectionCard>
+        </header>
+
+        <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="space-y-6">
+            <SectionCard>
+              <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+                <CheckCircle2 className="h-4 w-4 text-primary" />
+                Skills to share
+              </h3>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {user.skills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="rounded-full border border-border bg-secondary px-3 py-1.5 text-sm text-foreground"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </SectionCard>
+
+            <SectionCard>
+              <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+                <Star className="h-4 w-4 text-primary" />
+                Wants to learn
+              </h3>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {user.interests.map((interest) => (
+                  <span
+                    key={interest}
+                    className="rounded-full border border-border bg-card px-3 py-1.5 text-sm text-foreground"
+                  >
+                    {interest}
+                  </span>
+                ))}
+              </div>
+            </SectionCard>
+
+            <SectionCard className="space-y-5">
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+                  Availability
+                </h3>
+                <div className="mt-3 flex items-start gap-3 text-sm text-muted-foreground">
+                  <Calendar className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <span>{user.availability}</span>
+                </div>
+              </div>
+
+              <div className="h-px bg-border" />
+
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-[0.26em] text-muted-foreground">
+                  Contact info
+                </h3>
+                <ul className="mt-3 space-y-3 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-3">
+                    <Mail className="h-4 w-4 shrink-0" />
+                    <a
+                      href={`mailto:${user.contactDetails.email}`}
+                      className="transition-colors hover:text-foreground"
+                    >
+                      {user.contactDetails.email}
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Phone className="h-4 w-4 shrink-0" />
+                    {user.contactDetails.phone}
+                  </li>
+                </ul>
+              </div>
+            </SectionCard>
           </div>
 
-          <p className="text-lg text-foreground/90 max-w-2xl leading-relaxed">
-            {user.bio}
-          </p>
-        </div>
-
-        {/* Actions */}
-        <div className="flex w-full md:w-auto gap-3 shrink-0">
-          <button className="flex-1 md:flex-none inline-flex items-center justify-center gap-2 rounded-xl bg-card border border-border px-5 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-            <MessageCircle className="w-4 h-4" />
-            Message
-          </button>
-          <button className="flex-1 md:flex-none inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-[0_8px_20px_color-mix(in_srgb,var(--primary)_30%,transparent)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_24px_color-mix(in_srgb,var(--primary)_40%,transparent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-            <ArrowRightLeft className="w-4 h-4" />
-            Request Swap
-          </button>
-        </div>
-      </header>
-
-      {/* ─── Body Layout ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mt-12">
-
-        {/* Left Column (Skills & Contact) */}
-        <div className="lg:col-span-1 space-y-10">
-
-          {/* Teaches */}
-          <section className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-primary" />
-              Skills to share
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {user.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="inline-flex items-center px-3.5 py-1.5 rounded-lg text-sm font-medium bg-primary/10 text-primary border border-primary/20"
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          {/* Learns */}
-          <section className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <Star className="w-4 h-4" />
-              Wants to learn
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {user.interests.map((interest) => (
-                <span
-                  key={interest}
-                  className="inline-flex items-center px-3.5 py-1.5 rounded-lg text-sm font-medium bg-secondary text-secondary-foreground border border-border"
-                >
-                  {interest}
-                </span>
-              ))}
-            </div>
-          </section>
-
-          {/* Details Card */}
-          <section className="rounded-2xl border border-border bg-card p-6 space-y-6 shadow-sm">
-            <div className="space-y-4">
-               <h3 className="text-sm font-semibold text-foreground">Availability</h3>
-               <div className="flex items-start gap-3 text-sm text-muted-foreground">
-                 <Calendar className="w-5 h-5 shrink-0 text-foreground/40 mt-0.5" />
-                 <span>{user.availability}</span>
-               </div>
-            </div>
-
-            <div className="h-px bg-border" />
-
-            <div className="space-y-4">
-               <h3 className="text-sm font-semibold text-foreground">Contact Info</h3>
-               <ul className="space-y-3 text-sm text-muted-foreground">
-                 <li className="flex items-center gap-3">
-                   <Mail className="w-4 h-4 shrink-0" />
-                   <a href={`mailto:${user.contactDetails.email}`} className="hover:text-primary transition-colors">
-                     {user.contactDetails.email}
-                   </a>
-                 </li>
-                 <li className="flex items-center gap-3">
-                   <Phone className="w-4 h-4 shrink-0" />
-                   {user.contactDetails.phone}
-                 </li>
-               </ul>
-            </div>
-          </section>
-
-        </div>
-
-        {/* Right Column (Stats & History) */}
-        <div className="lg:col-span-2 space-y-10">
-
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-             <div className="rounded-2xl border border-border bg-card p-5 flex flex-col gap-2 shadow-sm">
-               <div className="flex items-center gap-2 text-muted-foreground text-sm font-medium">
-                 <Coins className="w-4 h-4" />
-                 Available Credits
-               </div>
-               <div className="text-3xl font-heading font-semibold text-foreground">
-                 {user.credits}
-               </div>
-             </div>
-
-             <div className="rounded-2xl border border-border bg-card p-5 flex flex-col gap-2 shadow-sm">
-               <div className="flex items-center gap-2 text-muted-foreground text-sm font-medium">
-                 <ArrowRightLeft className="w-4 h-4" />
-                 Total Swaps
-               </div>
-               <div className="text-3xl font-heading font-semibold text-foreground">
-                 {user.previousExchanges.length}
-               </div>
-             </div>
-
-             <div className="rounded-2xl border border-border bg-card p-5 flex flex-col gap-2 shadow-sm sm:col-span-1 col-span-2">
-               <div className="flex items-center gap-2 text-muted-foreground text-sm font-medium">
-                 <Clock className="w-4 h-4" />
-                 Member Since
-               </div>
-               <div className="text-3xl font-heading font-semibold text-foreground">
-                 2026
-               </div>
-             </div>
-          </div>
-
-          {/* Recent Exchanges */}
-          <section className="space-y-6">
+          <SectionCard className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-heading font-semibold text-foreground">
-                Recent Exchanges
+              <h3 className="font-heading text-2xl font-[900] tracking-[-0.05em] text-foreground">
+                Recent exchanges
               </h3>
             </div>
 
             {user.previousExchanges.length > 0 ? (
-              <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
-                <ul className="divide-y divide-border">
-                  {user.previousExchanges.map((exchange, idx) => (
-                    <li key={idx} className="p-6 transition hover:bg-muted/50">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="space-y-1">
-                          <p className="text-sm font-medium text-foreground">
-                            Swapped with <span className="text-primary">{exchange.with}</span>
-                          </p>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1.5">
-                              <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                              Taught: {exchange.gave}
-                            </span>
-                            <span className="flex items-center gap-1.5">
-                              <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                              Learned: {exchange.received}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="text-sm text-muted-foreground shrink-0">
-                          {new Date(exchange.date).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric'
-                          })}
+              <div className="divide-y divide-border overflow-hidden rounded-xl border border-border">
+                {user.previousExchanges.map((exchange, idx) => (
+                  <div key={idx} className="p-5 transition hover:bg-accent/40">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-foreground">
+                          Swapped with{' '}
+                          <span className="text-primary">{exchange.with}</span>
+                        </p>
+                        <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+                          <span className="inline-flex items-center gap-1.5">
+                            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                            Taught: {exchange.gave}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5">
+                            <span className="h-1.5 w-1.5 rounded-full bg-cyan-500" />
+                            Learned: {exchange.received}
+                          </span>
                         </div>
                       </div>
-                    </li>
-                  ))}
-                </ul>
+                      <div className="text-sm text-muted-foreground">
+                        {new Date(exchange.date).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-border p-12 text-center text-muted-foreground">
-                <p>No recent exchanges to show.</p>
+              <div className="rounded-xl border border-dashed border-border p-10 text-center text-muted-foreground">
+                No recent exchanges to show.
               </div>
             )}
-          </section>
-
+          </SectionCard>
         </div>
-      </div>
+      </Section>
     </main>
   )
 }

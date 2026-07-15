@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { Eye, EyeOff, Radio } from 'lucide-react'
 
-/* ───────────────────────── Field ───────────────────────── */
-
 type FieldProps = {
   id: string
   label: string
@@ -38,12 +36,12 @@ export function Field({
     >
       <label
         htmlFor={id}
-        className="block text-[13px] font-medium tracking-wide text-muted-foreground"
+        className="block text-[13px] font-medium tracking-[0.4px] text-[#8a8f98]"
       >
         {label}
       </label>
-      <div className="relative flex items-center gap-3 rounded-xl border border-border bg-input px-4 py-3.5 transition-all duration-200 focus-within:border-ring focus-within:bg-[color-mix(in_srgb,var(--input)_92%,var(--primary)_8%)] focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--ring)_15%,transparent)]">
-        <span className="shrink-0 text-muted-foreground transition-colors duration-200 group-focus-within:text-primary">
+      <div className="relative flex items-center gap-3 rounded-[8px] border border-[#34343a] bg-[#0f1011] px-[12px] py-[8px] transition-all duration-200 focus-within:border-[#5e69d1] focus-within:ring-2 focus-within:ring-[#5e69d1]/50">
+        <span className="shrink-0 text-[#8a8f98] transition-colors duration-200 group-focus-within:text-[#5e6ad2]">
           {icon}
         </span>
         <input
@@ -54,21 +52,17 @@ export function Field({
           onChange={onChange}
           autoComplete={autoComplete}
           placeholder={placeholder}
-          className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-[color-mix(in_srgb,var(--muted-foreground)_50%,transparent)]"
+          className="w-full bg-transparent text-[16px] text-[#f7f8f8] outline-none placeholder:text-[#62666d]"
         />
         {showToggle && (
           <button
             type="button"
             tabIndex={-1}
             onClick={() => setVisible((v) => !v)}
-            className="shrink-0 text-muted-foreground transition-colors hover:text-foreground"
+            className="shrink-0 text-[#8a8f98] transition-colors hover:text-[#f7f8f8]"
             aria-label={visible ? 'Hide password' : 'Show password'}
           >
-            {visible ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
+            {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
         )}
       </div>
@@ -76,24 +70,20 @@ export function Field({
   )
 }
 
-/* ──────────────────────── Divider ──────────────────────── */
-
 export function Divider({ delay }: { delay: number }) {
   return (
     <div
       className="flex items-center gap-4 opacity-0 animate-[fadeSlideUp_0.5s_ease_forwards]"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="h-px flex-1 bg-border" />
-      <span className="text-xs font-medium text-muted-foreground">
-        or
+      <div className="h-px flex-1 bg-[#23252a]" />
+      <span className="text-[13px] font-medium tracking-[0.4px] text-[#8a8f98]">
+        OR
       </span>
-      <div className="h-px flex-1 bg-border" />
+      <div className="h-px flex-1 bg-[#23252a]" />
     </div>
   )
 }
-
-/* ─────────────────────── AuthShell ─────────────────────── */
 
 type AuthShellProps = {
   heading: string
@@ -103,40 +93,39 @@ type AuthShellProps = {
 
 export function AuthShell({ heading, subheading, children }: AuthShellProps) {
   return (
-    <main className="relative flex min-h-[calc(100vh-5rem)] font-body tracking-tight items-center justify-center overflow-hidden px-4 py-12">
-      {/* Ambient glow */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-1/3 h-112 w-md -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/[0.07] blur-[120px]" />
-        <div className="absolute bottom-0 left-1/2 h-72 w-160 -translate-x-1/2 rounded-full bg-primary/4 blur-[100px]" />
-      </div>
-
-      {/* Auth card */}
-      <div className="relative w-full max-w-104">
-        <div className="rounded-2xl border border-border bg-card p-8 shadow-xl sm:p-10">
-          {/* Brand */}
-          <div
-            className="mb-8 flex flex-col items-center text-center opacity-0 animate-[fadeSlideUp_0.5s_ease_forwards]"
-            style={{ animationDelay: '60ms' }}
-          >
-            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-primary/10 shadow-sm">
-              <Radio className="h-5.5 w-5.5 text-primary" />
-            </div>
-            <h1 className="font-heading text-2xl tracking-tight text-foreground sm:text-3xl">
-              {heading}
-            </h1>
-            <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              {subheading}
-            </p>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#010102] px-6 py-10 font-sans">
+      <section className="relative w-full max-w-[440px] rounded-[16px] border border-[#23252a] bg-[#0f1011] p-8 sm:p-10">
+        <div
+          className="mx-auto flex w-full flex-col items-center text-center opacity-0 animate-[fadeSlideUp_0.5s_ease_forwards]"
+          style={{ animationDelay: '60ms' }}
+        >
+          <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[#141516] border border-[#23252a]">
+            <Radio className="h-6 w-6 text-[#5e6ad2]" />
           </div>
-
-          {children}
+          <h1 className="font-semibold text-[32px] leading-[1.15] tracking-[-1.0px] text-[#f7f8f8] sm:text-[40px]">
+            {heading}
+          </h1>
+          <p className="mt-4 text-[16px] leading-[1.5] tracking-[-0.05px] text-[#d0d6e0]">
+            {subheading}
+          </p>
         </div>
-      </div>
+
+        <div className="mt-8">{children}</div>
+
+        <div className="mt-8 grid gap-3 text-[14px] sm:grid-cols-3">
+          {['No cash required', 'Credits move forward', 'Teach and learn'].map((item) => (
+            <div
+              key={item}
+              className="rounded-[6px] bg-[#141516] border border-[#23252a] px-3 py-2 text-center font-medium text-[#8a8f98]"
+            >
+              {item}
+            </div>
+          ))}
+        </div>
+      </section>
     </main>
   )
 }
-
-/* ──────────────────── Stagger helper ──────────────────── */
 
 export function createStagger(base = 200, step = 80) {
   let i = 0

@@ -8,10 +8,11 @@ export default function Sidebar({
   onSelect: (filter: string) => void
 }) {
   return (
-    <aside className="bg-sidebar rounded-xl w-1/3 h-fit">
-      <h3 className="px-6 py-4">Filters</h3>
-      <div className="h-0.5 w-full bg-sidebar-foreground/50" />
-      <div className="flex flex-wrap gap-4 px-6 py-4">
+    <aside className="h-fit rounded-2xl border border-border bg-card p-5 shadow-[0_16px_40px_rgba(15,17,20,0.06)] lg:w-80">
+      <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+        Filters
+      </h3>
+      <div className="mt-4 flex flex-wrap gap-2">
         {filters.map((filter) => {
           const isActive = selected.includes(filter)
           return (
@@ -20,10 +21,10 @@ export default function Sidebar({
               type="button"
               onClick={() => onSelect(filter)}
               aria-pressed={isActive}
-              className={`px-3 py-1 rounded-full text-sm transition-colors ${
+              className={`rounded-full border px-3 py-2 text-sm transition-colors ${
                 isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-sidebar-foreground/10 text-sidebar-foreground hover:bg-sidebar-foreground/20'
+                  ? 'border-primary bg-primary text-primary-foreground shadow-[0_8px_20px_rgba(93,111,255,0.18)]'
+                  : 'border-border bg-secondary text-foreground hover:border-[color-mix(in_srgb,var(--primary)_24%,var(--border))] hover:bg-accent/40'
               }`}
             >
               {filter}

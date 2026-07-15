@@ -1,123 +1,107 @@
-
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Inter+Tight:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@theme {
-  --font-heading: "Nippo", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Satoshi", ui-sans-serif, system-ui, sans-serif;
-}
-
-@import "tailwindcss";
-
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --font-heading: "Inter Tight", Inter, system-ui, sans-serif;
+  --font-body: "Inter", Inter, system-ui, sans-serif;
+}
+
 :root {
-  --background: rgb(252, 252, 252);
-  --foreground: rgb(23, 23, 23);
-  --card: rgb(252, 252, 252);
-  --card-foreground: rgb(23, 23, 23);
-  --popover: rgb(252, 252, 252);
-  --popover-foreground: rgb(82, 82, 82);
-  --primary: rgb(114, 227, 173);
-  --primary-foreground: rgb(30, 39, 35);
-  --secondary: rgb(253, 253, 253);
-  --secondary-foreground: rgb(23, 23, 23);
-  --muted: rgb(237, 237, 237);
-  --muted-foreground: rgb(32, 32, 32);
-  --accent: rgb(237, 237, 237);
-  --accent-foreground: rgb(32, 32, 32);
-  --destructive: rgb(202, 50, 20);
-  --destructive-foreground: rgb(255, 252, 252);
-  --border: rgb(223, 223, 223);
-  --input: rgb(246, 246, 246);
-  --ring: rgb(114, 227, 173);
-  --chart-1: rgb(114, 227, 173);
-  --chart-2: rgb(59, 130, 246);
-  --chart-3: rgb(139, 92, 246);
-  --chart-4: rgb(245, 158, 11);
-  --chart-5: rgb(16, 185, 129);
-  --sidebar: rgb(252, 252, 252);
-  --sidebar-foreground: rgb(112, 112, 112);
-  --sidebar-primary: rgb(114, 227, 173);
-  --sidebar-primary-foreground: rgb(30, 39, 35);
-  --sidebar-accent: rgb(237, 237, 237);
-  --sidebar-accent-foreground: rgb(32, 32, 32);
-  --sidebar-border: rgb(223, 223, 223);
-  --sidebar-ring: rgb(114, 227, 173);
-  --font-sans: Outfit, sans-serif;
+  --background: rgb(250, 250, 248);
+  --foreground: rgb(15, 17, 20);
+  --card: rgb(255, 255, 255);
+  --card-foreground: rgb(15, 17, 20);
+  --popover: rgb(255, 255, 255);
+  --popover-foreground: rgb(74, 80, 92);
+  --primary: rgb(93, 111, 255);
+  --primary-foreground: rgb(255, 255, 255);
+  --secondary: rgb(243, 245, 249);
+  --secondary-foreground: rgb(15, 17, 20);
+  --muted: rgb(237, 240, 245);
+  --muted-foreground: rgb(88, 95, 108);
+  --accent: rgb(237, 240, 245);
+  --accent-foreground: rgb(15, 17, 20);
+  --destructive: rgb(220, 58, 58);
+  --destructive-foreground: rgb(255, 255, 255);
+  --border: rgb(223, 228, 236);
+  --input: rgb(245, 247, 250);
+  --ring: rgb(93, 111, 255);
+  --chart-1: rgb(93, 111, 255);
+  --chart-2: rgb(36, 130, 223);
+  --chart-3: rgb(109, 91, 247);
+  --chart-4: rgb(19, 191, 160);
+  --chart-5: rgb(249, 171, 0);
+  --sidebar: rgb(255, 255, 255);
+  --sidebar-foreground: rgb(88, 95, 108);
+  --sidebar-primary: rgb(93, 111, 255);
+  --sidebar-primary-foreground: rgb(255, 255, 255);
+  --sidebar-accent: rgb(243, 245, 249);
+  --sidebar-accent-foreground: rgb(15, 17, 20);
+  --sidebar-border: rgb(223, 228, 236);
+  --sidebar-ring: rgb(93, 111, 255);
+  --font-sans: "Inter", Inter, system-ui, sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: monospace;
-  --radius: 0.5rem;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --radius: 0.75rem;
   --shadow-x: 0px;
-  --shadow-y: 1px;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.17;
-  --shadow-color: #000000;
-  --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
-  --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
-  --shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 1px 2px -1px hsl(0 0% 0% / 0.17);
-  --shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 1px 2px -1px hsl(0 0% 0% / 0.17);
-  --shadow-md: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 2px 4px -1px hsl(0 0% 0% / 0.17);
-  --shadow-lg: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 4px 6px -1px hsl(0 0% 0% / 0.17);
-  --shadow-xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 8px 10px -1px hsl(0 0% 0% / 0.17);
-  --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.43);
-  --tracking-normal: 0.025em;
+  --shadow-y: 10px;
+  --shadow-blur: 30px;
+  --shadow-spread: -18px;
+  --shadow-opacity: 0.16;
+  --shadow-color: #0f172a;
+  --shadow-2xs: 0px 1px 2px 0px hsl(220 13% 10% / 0.04);
+  --shadow-xs: 0px 1px 2px 0px hsl(220 13% 10% / 0.06);
+  --shadow-sm: 0px 1px 2px 0px hsl(220 13% 10% / 0.08), 0px 8px 24px -16px hsl(220 13% 10% / 0.12);
+  --shadow: 0px 1px 2px 0px hsl(220 13% 10% / 0.08), 0px 12px 32px -18px hsl(220 13% 10% / 0.16);
+  --shadow-md: 0px 1px 2px 0px hsl(220 13% 10% / 0.08), 0px 16px 40px -20px hsl(220 13% 10% / 0.16);
+  --shadow-lg: 0px 1px 2px 0px hsl(220 13% 10% / 0.09), 0px 20px 50px -22px hsl(220 13% 10% / 0.2);
+  --shadow-xl: 0px 1px 2px 0px hsl(220 13% 10% / 0.1), 0px 24px 64px -24px hsl(220 13% 10% / 0.24);
+  --shadow-2xl: 0px 1px 2px 0px hsl(220 13% 10% / 0.16), 0px 28px 72px -26px hsl(220 13% 10% / 0.28);
+  --tracking-normal: 0.01em;
   --spacing: 0.25rem;
 }
 
 .dark {
-  --background: rgb(18, 18, 18);
-  --foreground: rgb(226, 232, 240);
-  --card: rgb(23, 23, 23);
-  --card-foreground: rgb(226, 232, 240);
-  --popover: rgb(36, 36, 36);
-  --popover-foreground: rgb(169, 169, 169);
-  --primary: rgb(0, 98, 57);
-  --primary-foreground: rgb(221, 232, 227);
-  --secondary: rgb(36, 36, 36);
-  --secondary-foreground: rgb(250, 250, 250);
-  --muted: rgb(31, 31, 31);
-  --muted-foreground: rgb(162, 162, 162);
-  --accent: rgb(49, 49, 49);
-  --accent-foreground: rgb(250, 250, 250);
-  --destructive: rgb(84, 28, 21);
-  --destructive-foreground: rgb(237, 233, 232);
-  --border: rgb(41, 41, 41);
-  --input: rgb(36, 36, 36);
-  --ring: rgb(74, 222, 128);
-  --chart-1: rgb(74, 222, 128);
-  --chart-2: rgb(96, 165, 250);
-  --chart-3: rgb(167, 139, 250);
-  --chart-4: rgb(251, 191, 36);
-  --chart-5: rgb(45, 212, 191);
-  --sidebar: rgb(18, 18, 18);
-  --sidebar-foreground: rgb(137, 137, 137);
-  --sidebar-primary: rgb(0, 98, 57);
-  --sidebar-primary-foreground: rgb(221, 232, 227);
-  --sidebar-accent: rgb(49, 49, 49);
-  --sidebar-accent-foreground: rgb(250, 250, 250);
-  --sidebar-border: rgb(41, 41, 41);
-  --sidebar-ring: rgb(74, 222, 128);
-  --font-sans: Outfit, sans-serif;
+  --background: rgb(10, 12, 14);
+  --foreground: rgb(236, 239, 244);
+  --card: rgb(15, 18, 21);
+  --card-foreground: rgb(236, 239, 244);
+  --popover: rgb(17, 20, 24);
+  --popover-foreground: rgb(181, 188, 198);
+  --primary: rgb(117, 133, 255);
+  --primary-foreground: rgb(255, 255, 255);
+  --secondary: rgb(22, 26, 31);
+  --secondary-foreground: rgb(236, 239, 244);
+  --muted: rgb(22, 26, 31);
+  --muted-foreground: rgb(164, 172, 184);
+  --accent: rgb(26, 31, 38);
+  --accent-foreground: rgb(236, 239, 244);
+  --destructive: rgb(238, 87, 87);
+  --destructive-foreground: rgb(255, 255, 255);
+  --border: rgb(34, 40, 48);
+  --input: rgb(18, 21, 26);
+  --ring: rgb(117, 133, 255);
+  --chart-1: rgb(117, 133, 255);
+  --chart-2: rgb(55, 149, 255);
+  --chart-3: rgb(142, 113, 255);
+  --chart-4: rgb(35, 204, 185);
+  --chart-5: rgb(255, 186, 43);
+  --sidebar: rgb(15, 18, 21);
+  --sidebar-foreground: rgb(164, 172, 184);
+  --sidebar-primary: rgb(117, 133, 255);
+  --sidebar-primary-foreground: rgb(255, 255, 255);
+  --sidebar-accent: rgb(26, 31, 38);
+  --sidebar-accent-foreground: rgb(236, 239, 244);
+  --sidebar-border: rgb(34, 40, 48);
+  --sidebar-ring: rgb(117, 133, 255);
+  --font-sans: "Inter", Inter, system-ui, sans-serif;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: monospace;
-  --radius: 0.5rem;
-  --shadow-x: 0px;
-  --shadow-y: 1px;
-  --shadow-blur: 3px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.17;
-  --shadow-color: #000000;
-  --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
-  --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.09);
-  --shadow-sm: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 1px 2px -1px hsl(0 0% 0% / 0.17);
-  --shadow: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 1px 2px -1px hsl(0 0% 0% / 0.17);
-  --shadow-md: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 2px 4px -1px hsl(0 0% 0% / 0.17);
-  --shadow-lg: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 4px 6px -1px hsl(0 0% 0% / 0.17);
-  --shadow-xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.17), 0px 8px 10px -1px hsl(0 0% 0% / 0.17);
-  --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.43);
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --radius: 0.75rem;
+  --tracking-normal: 0.01em;
 }
 
 @theme inline {
@@ -158,10 +142,10 @@
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 6px);
 
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
@@ -184,16 +168,29 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    color-scheme: light;
+  }
+
+  .dark html {
+    color-scheme: dark;
+  }
+
   body {
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 18%, transparent);
+    color: var(--foreground);
+  }
 }
+
 * {
   box-sizing: border-box;
 }
-
-
 
 @keyframes fadeSlideUp {
   from {

@@ -1,24 +1,28 @@
-// types/user.ts
-interface SocialLinks {
-  github?: string
-  twitter?: string
-  linkedin?: string
-}
+// export interface SocialLinks {
+//   github?: string
+//   twitter?: string
+//   linkedin?: string
+// }
 
-interface UserProfile {
+export interface UserProfile {
   id: number
   name: string
   email: string
   cached_balance: number
-  social_links: SocialLinks
+  social_links: string[]
   created_at: string
 }
 
-interface AuthResponse {
+export interface AuthResponse {
   user: UserProfile
   token: string
 }
 
-interface MeResponse {
+export interface MeResponse {
   user: UserProfile
+}
+
+export interface UpdateMePayload{
+  name: string;
+  social_links: string[]
 }
