@@ -1,35 +1,50 @@
-import { findUserById, updateUser } from "../queries/users.queries.js";
+import { findUserById, findUserProfileById, updateUser } from "../queries/users.queries.js";
 import ApiError from "../utils/ApiError.js";
 
 export async function getMe(req, res) {
-    const user = findUserById(req.user.id);
+    const u = req.user.id
+    const user = await findUserById(u);
     if (!user) {
         throw new ApiError(404, "User not found");
     }
+    const profile = await findUserProfileById(u)
     // const skills = getUserSkills(user.id);
     // const ratingSummary = getUserRatingSummary(user.id);
 
     res.status(200).json({
-        user: { ...user, social_links: JSON.parse(user.social_links) }
+        user: { ...user, 
+                profile: profile.cached_balance, 
+                social_links: profile.social_links ? JSON.parse(user.social_links) : null
+            }
     });
 }
 
 export async function updateProfile(req, res) {
-    const updates = {};
+    const nameUpdate = {};
+    const profileUpdate = {};
+
     if (req.body.name !== undefined) {
-        updates.name = req.body.name;
+        nameUpdate.name = req.body.name;
     }
     if (req.body.socialLinks !== undefined) {
-        updates.socialLinks = req.body.socialLinks ? JSON.stringify(req.body.socialLinks) : null;
+        profileUpdates.socialLinks = req.body.socialLinks ? JSON.stringify(req.body.socialLinks) : null;
     }
-    if (Object.keys(updates).length === 0) {
+    if (Object.keys(nameUpdate).length === 0 || Object.keys(profileUpdate).length === 0) {
         return res.status(400).json({ error: "No valid fields provided for update." });
     }
-    updateUser(req.user.id, updates);
-    const updatedUser = findUserById(req.user.id);
+
+    if (!Object.keys(nameUpdate).length === 0) {
+       await updateUser(req.user.id, nameUpdate); 
+    }
+
+    if (!Object.keys(profileUpdate).length === 0) {
+       await updateProfile(req.user.id, profileUpdate); 
+    }
+    
+    const updatedUser = await findUserById(req.user.id);
     
     res.status(200).json({
-        user: { 
+        user: {
             ...updatedUser, 
             social_links: updatedUser.social_links ? JSON.parse(updatedUser.social_links) : null 
         }

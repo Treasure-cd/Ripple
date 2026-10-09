@@ -12,12 +12,12 @@ const createSkillController = async (req, res) => {
         return res.status(400).json({ error: "Category is invalid. Try one of Programming, Design and Language" });
     }
 
-    const id = createSkill(name, category);
+    const id = await createSkill(name, category);
     res.status(201).json({ id });
 };
 
 const getSkillController = async (req, res) => {
-    const skills = getSkills();
+    const skills = await getSkills();
     res.status(200).json({ skills });
 };
 
@@ -28,7 +28,7 @@ const searchSkillController = async (req, res) => {
         return res.status(200).json({ skills: [] });
     }
 
-    const skills = searchSkill(searchTerm);
+    const skills = await searchSkill(searchTerm);
     res.status(200).json({ skills });
 }
 

@@ -1,24 +1,29 @@
-import db from '../database/db.js'
+import pool from "../database/db.js";
 
-export function getSkills() {
-    const stmt = db.prepare(`SELECT * FROM skills ORDER BY name`);
-    return stmt.all();
+export async function getSkills() {
+    const result = await pool.query(`SELECT * FROM skills ORDER BY name`);
+    return result.rows;
 }
 
-export function createSkill(name, category) {
-    const stmt = db.prepare(`INSERT INTO skills (name, category) VALUES (?, ?)`)
-    const info = stmt.run(name, category)
-    return info.lastInsertRowid;
+export async function createSkill(name, category) {
+    const result = await pool.query(
+        `INSERT INTO skills (name, category) VALUES ($1, $2) RETURNING id`,
+        [name, category]
+    );
+    return result.rows[0]?.id ?? null;
 }
 
-export function searchSkill(searchTerm) {
+export async function searchSkill(searchTerm) {
     const wildcardQuery = `%${searchTerm.trim().toLowerCase()}%`;
-    const stmt = db.prepare(`
-        SELECT id, name, category
-        FROM skills
-        WHERE LOWER(name) LIKE ?
-        ORDER BY name
-        LIMIT 10
-    `);
-    return stmt.all(wildcardQuery);
+    const result = await pool.query(
+        `
+            SELECT id, name, category
+            FROM skills
+            WHERE LOWER(name) LIKE $1
+            ORDER BY name
+            LIMIT 10
+        `,
+        [wildcardQuery]
+    );
+    return result.rows;
 }

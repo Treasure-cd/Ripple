@@ -7,6 +7,7 @@ const errorHandler = (err, req, res, next) => {
     logger.error(`${statusCode} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
     if (err.stack) logger.error(err.stack);
 
+    // exception
     if (err.message && err.message.includes("FOREIGN KEY constraint failed")) {
         statusCode = 400;
         finalMessage = "Invalid reference: The item you are trying to link to does not exist.";

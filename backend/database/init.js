@@ -1,8 +1,23 @@
 import fs from "fs";
-import db from "./db.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import pool from "./db.js";
 
-const schema = fs.readFileSync("./database/schema.sql", "utf8");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-db.exec(schema);
+const schemaPath = path.join(__dirname, "schema.sql");
+const schema = fs.readFileSync(schemaPath, "utf8");
 
-console.log("Database initialized.");
+async function init() {
+  try {
+    await pool.query(schema);
+    console.log("Database initialized.");
+  } catch (error) {
+    console.error("Error initializing database:", error);
+  } finally {
+    await pool.end();
+  }
+}
+
+init();

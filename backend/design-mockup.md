@@ -1,6 +1,10 @@
 ## How database looks like.
 
 Ripple is an app that works as a place you can earn and spend knowledge credits.
+Auth (set up with betterauth):
+    - BetterAuth's struct.
+
+
 Users have:
     - Id
     - Name

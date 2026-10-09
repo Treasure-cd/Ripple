@@ -1,5 +1,13 @@
-import Database from "better-sqlite3";
+import pg from "pg";
 
-const database = new Database('database/app.db')
+if (!process.env.DATABASE_URL) {
+  process.loadEnvFile();
+}
 
-export default database;
+const { Pool } = pg;
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
+
+export default pool;

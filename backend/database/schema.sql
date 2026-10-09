@@ -1,50 +1,45 @@
-CREATE TABLE if not exists users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    cached_balance INTEGER NOT NULL DEFAULT 0 CHECK (cached_balance >= 0),
-    social_links TEXT DEFAULT '{}',
-    created_at TEXT NOT NULL DEFAULT (datetime('now')),
-    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+CREATE TABLE IF NOT EXISTS profiles (
+    user_id TEXT PRIMARY KEY REFERENCES "user"(id) ON DELETE CASCADE,
+    cached_balance INTEGER DEFAULT 0,
+    social_links JSONB
 );
 
-CREATE TABLE if not exists skills (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS skills (
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
     category TEXT NOT NULL CHECK (category IN ('Programming', 'Design', 'Language'))
 );
 
-CREATE TABLE if not exists user_skills (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL REFERENCES users(id),
-    skill_id INTEGER NOT NULL REFERENCES skills(id),
+CREATE TABLE IF NOT EXISTS user_skills (
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    skill_id INTEGER NOT NULL REFERENCES skills(id) ON DELETE CASCADE,
     intent TEXT NOT NULL CHECK (intent IN ('Teach', 'Learn')),
     proficiency_level TEXT CHECK (proficiency_level IN ('Beginner', 'Intermediate', 'Expert')),
     hourly_rate INTEGER DEFAULT 1,
-    verified INTEGER NOT NULL DEFAULT 0,
+    verified BOOLEAN NOT NULL DEFAULT FALSE,
     UNIQUE (user_id, skill_id, intent),
     CHECK (intent = 'Teach' OR hourly_rate IS NULL)
 );
 
-CREATE TABLE if not exists sessions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS sessions (
+    id SERIAL PRIMARY KEY,
     user_skill_id INTEGER NOT NULL REFERENCES user_skills(id),
-    learner_id INTEGER NOT NULL REFERENCES users(id),
-    teacher_id INTEGER NOT NULL REFERENCES users(id),
-    scheduled_at TEXT NOT NULL,
+    learner_id TEXT NOT NULL REFERENCES "user"(id),
+    teacher_id TEXT NOT NULL REFERENCES "user"(id),
+    scheduled_at TIMESTAMP NOT NULL,
     credits_cost INTEGER NOT NULL,
     status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Cancelled')),
-    created_at TEXT NOT NULL DEFAULT (datetime('now')),
-    completed_at TEXT
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP
 );
 
-CREATE TABLE if not exists transactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS transactions (
+    id SERIAL PRIMARY KEY,
     session_id INTEGER REFERENCES sessions(id),
-    sender_id INTEGER NOT NULL REFERENCES users(id),
-    receiver_id INTEGER NOT NULL REFERENCES users(id),
+    sender_id TEXT NOT NULL REFERENCES "user"(id),
+    receiver_id TEXT NOT NULL REFERENCES "user"(id),
     amount INTEGER NOT NULL,
     status TEXT NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Cancelled')),
-    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

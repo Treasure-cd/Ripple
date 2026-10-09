@@ -1,19 +1,24 @@
-import db from '../database/db.js'
+import pool from "../database/db.js";
 
-export function addUserSkill(userId, { skillId, intent, proficiencyLevel, hourlyRate }) {
+export async function addUserSkill(userId, { skillId, intent, proficiencyLevel, hourlyRate }) {
     const rate = intent === 'Teach' ? (hourlyRate ?? 1) : null;
 
-    const stmt = db.prepare(`
-        INSERT INTO user_skills (user_id, skill_id, intent, proficiency_level, hourly_rate)
-        VALUES (?, ?, ?, ?, ?)
-    `);
-    return stmt.run(userId, skillId, intent, proficiencyLevel ?? null, rate).lastInsertRowid;
+    const result = await pool.query(
+        `
+            INSERT INTO user_skills (user_id, skill_id, intent, proficiency_level, hourly_rate)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id
+        `,
+        [userId, skillId, intent, proficiencyLevel ?? null, rate]
+    );
+    return result.rows[0]?.id ?? null;
 }
 
-export function getUserSkills(userId) {
-    const stmt = db.prepare(`
-            SELECT * FROM user_skills WHERE user_id = ?
-        `);
-    return stmt.get(userId)
+export async function getUserSkills(userId) {
+    const result = await pool.query(
+        `SELECT * FROM user_skills WHERE user_id = $1`,
+        [userId]
+    );
+    return result.rows;
 }
 

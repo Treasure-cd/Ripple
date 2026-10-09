@@ -1,35 +1,66 @@
-import db from "../db.js";
+import pool from "../database/db.js";
+import ApiError from "../utils/ApiError.js";
 
-export function createSessionEscrowed({ userSkillId, learnerId, teacherId, scheduledAt, creditsCost }) {
-    const run = db.transaction(() => {
-        const learner = db.prepare(`SELECT cached_balance FROM users WHERE id = ?`).get(learnerId);
+export async function createSessionEscrowed({ userSkillId, learnerId, teacherId, scheduledAt, creditsCost }) {
+    const client = await pool.connect();
+
+    try {
+        await client.query("BEGIN");
+
+        const learnerResult = await client.query(
+            `SELECT cached_balance FROM users WHERE id = $1 LIMIT 1`,
+            [learnerId]
+        );
+        const learner = learnerResult.rows[0];
+
         if (!learner || learner.cached_balance < creditsCost) {
             throw new Error("Insufficient credits");
         }
 
-        const sessionInfo = db.prepare(`
-            INSERT INTO sessions (user_skill_id, learner_id, teacher_id, scheduled_at, credits_cost)
-            VALUES (?, ?, ?, ?, ?)
-        `).run(userSkillId, learnerId, teacherId, scheduledAt, creditsCost);
+        const sessionResult = await client.query(
+            `
+                INSERT INTO sessions (user_skill_id, learner_id, teacher_id, scheduled_at, credits_cost)
+                VALUES ($1, $2, $3, $4, $5)
+                RETURNING id
+            `,
+            [userSkillId, learnerId, teacherId, scheduledAt, creditsCost]
+        );
+        const sessionId = sessionResult.rows[0].id;
 
-        db.prepare(`
-            INSERT INTO transactions (session_id, sender_id, receiver_id, amount, status)
-            VALUES (?, ?, ?, ?, 'Pending')
-        `).run(sessionInfo.lastInsertRowid, learnerId, teacherId, creditsCost);
+        await client.query(
+            `
+                INSERT INTO transactions (session_id, sender_id, receiver_id, amount, status)
+                VALUES ($1, $2, $3, $4, 'Pending')
+            `,
+            [sessionId, learnerId, teacherId, creditsCost]
+        );
 
-        db.prepare(`
-            UPDATE users SET cached_balance = cached_balance - ? WHERE id = ?
-        `).run(creditsCost, learnerId);
+        await client.query(
+            `UPDATE users SET cached_balance = cached_balance - $1 WHERE id = $2`,
+            [creditsCost, learnerId]
+        );
 
-        return sessionInfo.lastInsertRowid;
-    });
-
-    return run();
+        await client.query("COMMIT");
+        return sessionId;
+    } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+    } finally {
+        client.release();
+    }
 }
 
-export function completeSession(sessionId, requestingUserId) {
-    const run = db.transaction(() => {
-        const session = db.prepare(`SELECT * FROM sessions WHERE id = ?`).get(sessionId);
+export async function completeSession(sessionId, requestingUserId) {
+    const client = await pool.connect();
+
+    try {
+        await client.query("BEGIN");
+
+        const sessionResult = await client.query(
+            `SELECT * FROM sessions WHERE id = $1 LIMIT 1`,
+            [sessionId]
+        );
+        const session = sessionResult.rows[0];
 
         if (!session) throw new ApiError(404, "Session not found");
         if (session.teacher_id !== requestingUserId) {
@@ -39,26 +70,41 @@ export function completeSession(sessionId, requestingUserId) {
             throw new ApiError(400, `Cannot complete a session with status ${session.status}`);
         }
 
-        db.prepare(`
-            UPDATE sessions SET status = 'Completed', completed_at = datetime('now') WHERE id = ?
-        `).run(sessionId);
+        await client.query(
+            `UPDATE sessions SET status = 'Completed', completed_at = NOW() WHERE id = $1`,
+            [sessionId]
+        );
 
-        db.prepare(`
-            UPDATE transactions SET status = 'Completed' WHERE session_id = ?
-        `).run(sessionId);
+        await client.query(
+            `UPDATE transactions SET status = 'Completed' WHERE session_id = $1`,
+            [sessionId]
+        );
 
-        db.prepare(`
-            UPDATE users SET cached_balance = cached_balance + ? WHERE id = ?
-        `).run(session.credits_cost, session.teacher_id);
-    });
+        await client.query(
+            `UPDATE users SET cached_balance = cached_balance + $1 WHERE id = $2`,
+            [session.credits_cost, session.teacher_id]
+        );
 
-    run();
+        await client.query("COMMIT");
+    } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+    } finally {
+        client.release();
+    }
 }
 
+export async function cancelSession(sessionId, requestingUserId) {
+    const client = await pool.connect();
 
-export function cancelSession(sessionId, requestingUserId) {
-    const run = db.transaction(() => {
-        const session = db.prepare(`SELECT * FROM sessions WHERE id = ?`).get(sessionId);
+    try {
+        await client.query("BEGIN");
+
+        const sessionResult = await client.query(
+            `SELECT * FROM sessions WHERE id = $1 LIMIT 1`,
+            [sessionId]
+        );
+        const session = sessionResult.rows[0];
 
         if (!session) throw new ApiError(404, "Session not found");
         if (session.learner_id !== requestingUserId && session.teacher_id !== requestingUserId) {
@@ -68,18 +114,26 @@ export function cancelSession(sessionId, requestingUserId) {
             throw new ApiError(400, `Cannot cancel a session with status ${session.status}`);
         }
 
-        db.prepare(`
-            UPDATE sessions SET status = 'Cancelled' WHERE id = ?
-        `).run(sessionId);
+        await client.query(
+            `UPDATE sessions SET status = 'Cancelled' WHERE id = $1`,
+            [sessionId]
+        );
 
-        db.prepare(`
-            UPDATE transactions SET status = 'Cancelled' WHERE session_id = ?
-        `).run(sessionId);
+        await client.query(
+            `UPDATE transactions SET status = 'Cancelled' WHERE session_id = $1`,
+            [sessionId]
+        );
 
-        db.prepare(`
-            UPDATE users SET cached_balance = cached_balance + ? WHERE id = ?
-        `).run(session.credits_cost, session.learner_id);
-    });
+        await client.query(
+            `UPDATE users SET cached_balance = cached_balance + $1 WHERE id = $2`,
+            [session.credits_cost, session.learner_id]
+        );
 
-    run();
+        await client.query("COMMIT");
+    } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+    } finally {
+        client.release();
+    }
 }

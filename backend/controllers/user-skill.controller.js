@@ -28,7 +28,7 @@ export async function addUserSkillController(req, res) {
         }
     }
 
-    const id = addUserSkill(userId, {
+    const id = await addUserSkill(userId, {
         skillId,
         intent,
         proficiencyLevel,
@@ -42,7 +42,7 @@ export async function getUserSkillsController(req, res) {
     const userId = (req.user && req.user.id) || req.params.userId;
     if (!userId) throw new ApiError(401, 'Unauthorized');
 
-    const result = getUserSkills(userId);
+    const result = await getUserSkills(userId);
 
     let skills = [];
     if (!result) skills = [];

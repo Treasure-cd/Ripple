@@ -1,24 +1,34 @@
-import db from "../database/db.js";
+import pool from "../database/db.js";
 
-export function createUser({ name, email, passwordHash }) {
-    const stmt = db.prepare(`
-        INSERT INTO users (name, email, password_hash)
-        VALUES (?, ?, ?)
-    `);
-    const info = stmt.run(name, email, passwordHash);
-    return info.lastInsertRowid;
+export async function createUser({ name, email, passwordHash }) {
+    const result = await pool.query(
+        `
+            INSERT INTO users (name, email, password_hash)
+            VALUES ($1, $2, $3)
+            RETURNING id
+        `,
+        [name, email, passwordHash]
+    );
+    return result.rows[0]?.id ?? null;
 }
 
-export function findUserByEmail(email) {
-    const stmt = db.prepare(`SELECT * FROM users WHERE email = ?`);
-    return stmt.get(email);
+export async function findUserByEmail(email) {
+    const result = await pool.query(
+        `SELECT * FROM users WHERE email = $1 LIMIT 1`,
+        [email]
+    );
+    return result.rows[0] ?? null;
 }
 
-export function findUserById(id) {
-    const stmt = db.prepare(`
-        SELECT id, name, email, cached_balance, social_links, created_at
-        FROM users
-        WHERE id = ?
-    `);
-    return stmt.get(id);
+export async function findUserById(id) {
+    const result = await pool.query(
+        `
+            SELECT id, name, email, cached_balance, social_links, created_at
+            FROM users
+            WHERE id = $1
+            LIMIT 1
+        `,
+        [id]
+    );
+    return result.rows[0] ?? null;
 }
