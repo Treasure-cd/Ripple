@@ -10,8 +10,8 @@ export function useSignUp() {
   return useMutation({
     mutationFn: signup,
     onSuccess: (data) => {
-      setAccessToken(data.accessToken)
-      navigate({to: "/signin"})
-    }
+      setAccessToken(data.token ?? 'authenticated')
+      navigate({ to: '/profile' })
+    },
   })
 }

@@ -4,6 +4,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query'
 import { apiFetch } from '../../../lib/api-client'
 import { useAuthStore } from '../../../store/auth-store'
 import Profile from '#/components/Profile'
+import type { MeResponse } from '../../../types/user'
 
 const meQueryOptions = (token: string | null | undefined) =>
   queryOptions({

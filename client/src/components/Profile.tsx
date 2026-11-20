@@ -101,7 +101,7 @@ export default function Profile({
                     <Calendar className="h-4 w-4" />
                     Joined {joinDate}
                   </span>
-                  {user.social_links.length === 0 ? (
+                  {user.social_links?.[0] ? (
                     <a
                       href={user.social_links[0]}
                       target="_blank"
@@ -109,7 +109,7 @@ export default function Profile({
                       className="flex items-center gap-2 text-[#f7f8f8] transition-colors hover:text-[#5e6ad2]"
                     >
                       <FaGithub className="h-4 w-4" />
-                      github.com/{user.social_links.github.split('/').pop()}
+                      github.com/{user.social_links[0].split('/').pop()}
                     </a>
                   ) : (
                     <span className="flex items-center gap-2 text-[#62666d]">

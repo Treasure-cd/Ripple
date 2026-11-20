@@ -9,10 +9,8 @@ export function useSignIn() {
 
   return useMutation({
     mutationFn: signin,
-    onSuccess: (data: any) => {
-      console.log("Success: ", data)
-      setAccessToken(data.token)
-      console.log("Navigating...")
+    onSuccess: (data) => {
+      setAccessToken(data.token ?? 'authenticated')
       navigate({ to: '/profile' })
     },
   })

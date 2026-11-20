@@ -5,23 +5,22 @@ import errorHandler from './middleware/errorHandler.js';
 import userRouter from './routes/user.routes.js'
 import skillRouter from './routes/skill.routes.js'
 import userSkillRouter from './routes/user-skill.routes.js'
-import dotenv from 'dotenv'
 import cors from 'cors'
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger.js';
 import { toNodeHandler } from "better-auth/node";
 import { auth } from './database/auth.js';
 
-dotenv.config()
-console.log("Database url: ", process.env.DATABASE_URL) //you can add to test
-
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true,
+}));
 
 app.use(morgan('dev', { stream: { write: (message) => logger.info(message.trim()) } }));
 
 app.all(/^\/api\/auth/, toNodeHandler(auth));
+app.use(express.json());
 app.get('/', (req, res) => {
     res.json("Root of Ripple's")
 })

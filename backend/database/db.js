@@ -1,7 +1,8 @@
 import pg from "pg";
+import "dotenv/config";
 
 if (!process.env.DATABASE_URL) {
-  process.loadEnvFile();
+  throw new Error("DATABASE_URL must be set");
 }
 
 const { Pool } = pg;

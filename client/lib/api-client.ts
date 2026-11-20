@@ -4,13 +4,14 @@ async function apiFetch<T>(
   path: string,
   options: RequestInit & { token?: string | null } = {},
 ): Promise<T> {
-  const { token, headers, ...rest } = options
+  const { headers, token, ...rest } = options
+  void token
 
   const res = await fetch(`${API_URL}${path}`, {
     ...rest,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...headers,
     },
   })

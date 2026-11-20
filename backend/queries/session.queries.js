@@ -7,13 +7,15 @@ export async function createSessionEscrowed({ userSkillId, learnerId, teacherId,
     try {
         await client.query("BEGIN");
 
-        const learnerResult = await client.query(
-            `SELECT cached_balance FROM users WHERE id = $1 LIMIT 1`,
-            [learnerId]
+        const debitResult = await client.query(
+            `UPDATE profiles
+             SET cached_balance = cached_balance - $1
+             WHERE user_id = $2 AND cached_balance >= $1
+             RETURNING user_id`,
+            [creditsCost, learnerId]
         );
-        const learner = learnerResult.rows[0];
 
-        if (!learner || learner.cached_balance < creditsCost) {
+        if (!debitResult.rowCount) {
             throw new Error("Insufficient credits");
         }
 
@@ -33,11 +35,6 @@ export async function createSessionEscrowed({ userSkillId, learnerId, teacherId,
                 VALUES ($1, $2, $3, $4, 'Pending')
             `,
             [sessionId, learnerId, teacherId, creditsCost]
-        );
-
-        await client.query(
-            `UPDATE users SET cached_balance = cached_balance - $1 WHERE id = $2`,
-            [creditsCost, learnerId]
         );
 
         await client.query("COMMIT");
@@ -81,7 +78,7 @@ export async function completeSession(sessionId, requestingUserId) {
         );
 
         await client.query(
-            `UPDATE users SET cached_balance = cached_balance + $1 WHERE id = $2`,
+            `UPDATE profiles SET cached_balance = cached_balance + $1 WHERE user_id = $2`,
             [session.credits_cost, session.teacher_id]
         );
 
@@ -125,7 +122,7 @@ export async function cancelSession(sessionId, requestingUserId) {
         );
 
         await client.query(
-            `UPDATE users SET cached_balance = cached_balance + $1 WHERE id = $2`,
+            `UPDATE profiles SET cached_balance = cached_balance + $1 WHERE user_id = $2`,
             [session.credits_cost, session.learner_id]
         );
 

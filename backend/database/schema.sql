@@ -1,8 +1,72 @@
+CREATE TABLE IF NOT EXISTS "user" (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    "emailVerified" BOOLEAN NOT NULL DEFAULT FALSE,
+    image TEXT,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS account (
+    id TEXT PRIMARY KEY,
+    "accountId" TEXT NOT NULL,
+    "providerId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    "accessToken" TEXT,
+    "refreshToken" TEXT,
+    "idToken" TEXT,
+    "accessTokenExpiresAt" TIMESTAMP,
+    "refreshTokenExpiresAt" TIMESTAMP,
+    scope TEXT,
+    password TEXT,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS session (
+    id TEXT PRIMARY KEY,
+    "expiresAt" TIMESTAMP NOT NULL,
+    token TEXT NOT NULL UNIQUE,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
+    "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS verification (
+    id TEXT PRIMARY KEY,
+    identifier TEXT NOT NULL,
+    value TEXT NOT NULL,
+    "expiresAt" TIMESTAMP NOT NULL,
+    "createdAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS profiles (
     user_id TEXT PRIMARY KEY REFERENCES "user"(id) ON DELETE CASCADE,
-    cached_balance INTEGER DEFAULT 0,
-    social_links JSONB
+    cached_balance INTEGER NOT NULL DEFAULT 0,
+    social_links JSONB NOT NULL DEFAULT '[]'::jsonb
 );
+
+ALTER TABLE profiles
+    ADD COLUMN IF NOT EXISTS cached_balance INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS social_links JSONB NOT NULL DEFAULT '[]'::jsonb;
+
+UPDATE profiles
+SET cached_balance = COALESCE(cached_balance, 0),
+    social_links = COALESCE(social_links, '[]'::jsonb);
+
+ALTER TABLE profiles
+    ALTER COLUMN cached_balance SET DEFAULT 0,
+    ALTER COLUMN cached_balance SET NOT NULL,
+    ALTER COLUMN social_links SET DEFAULT '[]'::jsonb,
+    ALTER COLUMN social_links SET NOT NULL;
+
+INSERT INTO profiles (user_id)
+SELECT id FROM "user"
+ON CONFLICT (user_id) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS skills (
     id SERIAL PRIMARY KEY,

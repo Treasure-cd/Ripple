@@ -1,38 +1,51 @@
+import "dotenv/config";
 import { betterAuth } from 'better-auth';
-import pool from "./db.js"
-import { admin, username } from 'better-auth/plugins';
+import pool from "./db.js";
+
+const secret = process.env.BETTER_AUTH_SECRET;
+if (!secret) {
+  throw new Error("BETTER_AUTH_SECRET must be set");
+}
+
+const google =
+  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+    ? {
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      }
+    : undefined;
+const github =
+  process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET
+    ? {
+        clientId: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      }
+    : undefined;
 
 export const auth = betterAuth({
-  basePath: '/auth',
+  basePath: '/api/auth',
   trustedOrigins: [
-    'http://localhost:3000',
+    process.env.FRONTEND_URL || 'http://localhost:3000',
   ],
   database: pool,
-  secret: process.env.BETTER_AUTH_SECRET,
+  secret,
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
   },
   socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
-    },
-    github: {
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    },
+    ...(google ? { google } : {}),
+    ...(github ? { github } : {}),
   },
   databaseHooks: {
     user: {
       create: {
         after: async (user) => {
           await pool.query(
-            'INSERT INTO profiles (user_id, cached_balance, social_links) VALUES ($1, $2, $3)',
-            [user.id, 0]
+            `INSERT INTO profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING`,
+            [user.id],
           );
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });

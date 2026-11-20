@@ -24,7 +24,7 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
   useEffect(() => {
     if (isOpen && user) {
       setName(user.name || '')
-      setGithub(user.social_links[0] || '')
+      setGithub(user.social_links?.[0] || '')
       setErrorMsg('')
     }
   }, [isOpen, user])
@@ -36,10 +36,7 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
     try {
       await updateMutation.mutateAsync({
         name,
-        social_links: [
-          ...user.social_links,
-          github,
-        ],
+        socialLinks: github.trim() ? [github.trim()] : [],
       })
       onClose()
     } catch (err: any) {
@@ -91,7 +88,7 @@ export default function EditProfileModal({ isOpen, onClose, user }: EditProfileM
               Full name
             </label>
             <input
-              type="text"
+              type="url"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"

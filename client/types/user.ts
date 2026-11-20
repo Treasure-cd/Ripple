@@ -5,7 +5,7 @@
 // }
 
 export interface UserProfile {
-  id: number
+  id: string
   name: string
   email: string
   cached_balance: number
@@ -23,6 +23,6 @@ export interface MeResponse {
 }
 
 export interface UpdateMePayload{
-  name: string;
-  social_links: string[]
+  name?: string;
+  socialLinks?: string[]
 }

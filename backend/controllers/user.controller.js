@@ -1,52 +1,79 @@
-import { findUserById, findUserProfileById, updateUser } from "../queries/users.queries.js";
+import {
+    findUserById,
+    updateUserName,
+    updateUserSocialLinks,
+} from "../queries/users.queries.js";
 import ApiError from "../utils/ApiError.js";
 
 export async function getMe(req, res) {
-    const u = req.user.id
-    const user = await findUserById(u);
+    const user = await findUserById(req.user.id);
     if (!user) {
         throw new ApiError(404, "User not found");
     }
-    const profile = await findUserProfileById(u)
-    // const skills = getUserSkills(user.id);
-    // const ratingSummary = getUserRatingSummary(user.id);
 
     res.status(200).json({
-        user: { ...user, 
-                profile: profile.cached_balance, 
-                social_links: profile.social_links ? JSON.parse(user.social_links) : null
-            }
+        user: {
+            ...user,
+            cached_balance: user.cached_balance ?? 0,
+            social_links: user.social_links ?? [],
+        },
     });
 }
 
 export async function updateProfile(req, res) {
-    const nameUpdate = {};
-    const profileUpdate = {};
+    const body = req.body ?? {};
+    const { name } = body;
+    const socialLinks = body.socialLinks ?? body.social_links;
+    const shouldUpdateName = name !== undefined;
+    const shouldUpdateSocialLinks =
+        body.socialLinks !== undefined || body.social_links !== undefined;
 
-    if (req.body.name !== undefined) {
-        nameUpdate.name = req.body.name;
-    }
-    if (req.body.socialLinks !== undefined) {
-        profileUpdates.socialLinks = req.body.socialLinks ? JSON.stringify(req.body.socialLinks) : null;
-    }
-    if (Object.keys(nameUpdate).length === 0 || Object.keys(profileUpdate).length === 0) {
+    if (!shouldUpdateName && !shouldUpdateSocialLinks) {
         return res.status(400).json({ error: "No valid fields provided for update." });
     }
 
-    if (!Object.keys(nameUpdate).length === 0) {
-       await updateUser(req.user.id, nameUpdate); 
+    if (shouldUpdateName) {
+        if (typeof name !== "string" || !name.trim()) {
+            return res.status(400).json({ error: "name must be a non-empty string." });
+        }
+        await updateUserName(req.user.id, name.trim());
     }
 
-    if (!Object.keys(profileUpdate).length === 0) {
-       await updateProfile(req.user.id, profileUpdate); 
+    if (shouldUpdateSocialLinks) {
+        if (
+            !Array.isArray(socialLinks) ||
+            !socialLinks.every(
+                (link) =>
+                    typeof link === "string" &&
+                    isHttpUrl(link),
+            )
+        ) {
+            return res.status(400).json({
+                error: "socialLinks must be an array of HTTP or HTTPS URLs.",
+            });
+        }
+        await updateUserSocialLinks(req.user.id, socialLinks);
     }
-    
+
     const updatedUser = await findUserById(req.user.id);
-    
+    if (!updatedUser) {
+        throw new ApiError(404, "User not found");
+    }
+
     res.status(200).json({
         user: {
-            ...updatedUser, 
-            social_links: updatedUser.social_links ? JSON.parse(updatedUser.social_links) : null 
-        }
+            ...updatedUser,
+            cached_balance: updatedUser.cached_balance ?? 0,
+            social_links: updatedUser.social_links ?? [],
+        },
     });
+}
+
+function isHttpUrl(value) {
+    try {
+        const url = new URL(value);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+        return false;
+    }
 }
