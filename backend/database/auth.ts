@@ -1,6 +1,8 @@
 import "dotenv/config";
-import { betterAuth } from 'better-auth';
-import pool from "./db.js";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "@better-auth/drizzle-adapter";
+import { db } from "./db";
+import * as schema from "./schemas/auth.schema";
 
 const secret = process.env.BETTER_AUTH_SECRET;
 if (!secret) {
@@ -23,11 +25,13 @@ const github =
     : undefined;
 
 export const auth = betterAuth({
-  basePath: '/api/auth',
-  trustedOrigins: [
-    process.env.FRONTEND_URL || 'http://localhost:3000',
-  ],
-  database: pool,
+  basePath: "/api/auth",
+  trustedOrigins: [process.env.FRONTEND_URL || "http://localhost:3000"],
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    transaction: true,
+    schema,
+  }),
   secret,
   emailAndPassword: {
     enabled: true,
@@ -35,17 +39,5 @@ export const auth = betterAuth({
   socialProviders: {
     ...(google ? { google } : {}),
     ...(github ? { github } : {}),
-  },
-  databaseHooks: {
-    user: {
-      create: {
-        after: async (user) => {
-          await pool.query(
-            `INSERT INTO profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING`,
-            [user.id],
-          );
-        },
-      },
-    },
   },
 });
