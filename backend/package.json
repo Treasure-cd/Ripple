@@ -5,7 +5,8 @@
   "main": "index.ts",
   "scripts": {
     "start": "bun index.ts",
-    "dev": "bun --watch index.ts",
+    "dev": "bun --watch --check index.ts",
+    "check": "bun check",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "bunx drizzle-kit generate",
     "db:migrate": "bunx drizzle-kit migrate",
