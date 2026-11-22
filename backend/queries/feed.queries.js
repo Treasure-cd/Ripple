@@ -1,4 +1,4 @@
-import pool from "../database/db.js";
+import {pool} from "../database/db.js";
 
 export async function getTeachersForSkill(skillId) {
     const result = await pool.query(

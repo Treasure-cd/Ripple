@@ -1,4 +1,4 @@
-import pool from "../database/db.js";
+import {pool} from "../database/db.js";
 import ApiError from "../utils/ApiError.js";
 
 export async function createSessionEscrowed({ userSkillId, learnerId, teacherId, scheduledAt, creditsCost }) {

@@ -1,4 +1,4 @@
-import pool from "../database/db.js";
+import {pool} from "../database/db";
 
 export async function getSkills() {
     const result = await pool.query(`SELECT * FROM skills ORDER BY name`);

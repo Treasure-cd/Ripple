@@ -28,7 +28,7 @@ This project is currently a local development backend only. It is not hosted pub
 From the backend folder:
 
 ```bash
-pnpm install
+bun install
 ```
 
 ### 2. Create environment variables
@@ -39,14 +39,14 @@ Create a `.env` file in the backend folder if one does not already exist. At min
 JWT_SECRET=your_secret_here
 ```
 
-You may also add any other local environment values required by the app.
+You may also add any other local environment values required by the app (check out .env.example file).
 
 ### 3. Initialize the database
 
 Run:
 
 ```bash
-node database/init.js
+bun db:migrate
 ```
 
 This creates the database structure needed by the app.
@@ -56,13 +56,13 @@ This creates the database structure needed by the app.
 For normal startup:
 
 ```bash
-pnpm start
+bun start
 ```
 
 For development with auto-reload behavior:
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 Once running, the server should log that it is listening on port 5500.
@@ -78,13 +78,13 @@ backend/
   routes/           # API route definitions
   services/         # Business logic and shared app logic
   utils/            # Helper utilities such as JWT helpers and errors
-  index.js          # Main Express server entry point
+  index.ts          # Main Express server entry point
   package.json      # Backend scripts and dependencies
 ```
 
 ## Development notes
 
-- The server entry point is [backend/index.js](index.js).
+- The server entry point is [backend/index.ts](index.ts).
 - Logging is already set up for development output.
 - Errors are handled through the shared error middleware.
 - The app is using ESM modules, so import syntax follows Node's ES module style.

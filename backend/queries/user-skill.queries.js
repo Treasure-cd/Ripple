@@ -1,4 +1,4 @@
-import pool from "../database/db.js";
+import {pool} from "../database/db.js";
 
 export async function addUserSkill(userId, { skillId, intent, proficiencyLevel, hourlyRate }) {
     const rate = intent === 'Teach' ? (hourlyRate ?? 1) : null;
