@@ -5,6 +5,7 @@ import errorHandler from "./middleware/errorHandler.js";
 import userRouter from "./routes/user.routes.js";
 import skillRouter from "./routes/skill.routes.js";
 import userSkillRouter from "./routes/user-skill.routes.js";
+import discoveryRouter from "./routes/discovery.routes.js"
 import cors from "cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger.js";
@@ -34,6 +35,7 @@ app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/users", userRouter);
 app.use("/api/skills", skillRouter);
 app.use("/api/users/me/skills", userSkillRouter);
+app.use("/api/discover", discoveryRouter)
 
 app.use((req, _res, next) => {
   const error = Object.assign(new Error(`Not Found - ${req.originalUrl}`), {

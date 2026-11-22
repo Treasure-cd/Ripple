@@ -13,12 +13,12 @@ This file records the backend implementation currently present in the repository
 - Query functions exist for teacher listings and skill detail, but they are not currently connected to routes/controllers.
 - Query functions implement session booking with a learner credit debit and pending transaction, plus completion and cancellation operations that update session/transaction status and credit balances within a database transaction.
 - Swagger UI is mounted at `/api/docs`, with OpenAPI annotations for the currently routed profile, skill, and user-skill endpoints.
+- Add routes/controllers for teacher discovery and skill detail using the existing feed queries.
 
 ## Remaining work
 
 ### API and product behavior
 
-- Add routes/controllers for teacher discovery and skill detail using the existing feed queries.
 - Expose session booking, listing/detail, completion, and cancellation through authenticated API routes/controllers. Validate that the selected user skill is a teaching offer, the learner and teacher are distinct, scheduled time and credit cost are valid, and only authorized users can act.
 - Decide and implement session duration and pricing rules. The design describes one hour per credit by default with a per-user editable rate, while the current booking query accepts an arbitrary `creditsCost` and the schema has no duration field.
 - Add ledger history and reconcile the cached balance against ledger entries. The current schema has transactions but no separate credit ledger, and the current session queries update balances directly.

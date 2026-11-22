@@ -1,5 +1,5 @@
 import express from 'express'
-import { createSkillController, getSkillController, searchSkillController } from '../controllers/skill.controller.js'
+import { createSkillController, getSkillController, getSkillDetail, searchSkillController } from '../controllers/skill.controller.js'
 import { requireAuth } from '../middleware/authMiddleware.js';
 import asyncHandler from '../middleware/asyncHandler.js';
 
@@ -98,5 +98,6 @@ router.post('/', requireAuth, asyncHandler(createSkillController));
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 router.get('/search', requireAuth, asyncHandler(searchSkillController));
+router.get('/details', requireAuth, asyncHandler(getSkillDetail))
 
 export default router;
